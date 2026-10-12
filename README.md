@@ -22,3 +22,10 @@ Encoding always produces an even number of hex digits (whole bytes) so output li
 `hexToInt` returns a JS `Number`, not a `BigInt`. That caps useful `bitLength` at 53 bits; larger widths throw `RangeError`. If you need 64-bit values out, reach for a BigInt-based library. This ceiling is enforced, not silent.
 
 `hexToInt` also requires a `0x` / `0X` prefix. Bare hex is refused, because a missing prefix is the most common cause of silent off-by-one decoding bugs in hex-handling code.
+
+## Design notes
+
+The window stores values eagerly rather than keeping running aggregates. Running
+sums drift with floating point over long streams, and recomputing from a small
+buffer is cheap enough that the drift is not worth the speed.
+
